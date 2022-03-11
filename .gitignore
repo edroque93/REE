@@ -2,3 +2,6 @@
 config
 *.pyc
 ree.log
+.*
+*.ods
+*.csv
