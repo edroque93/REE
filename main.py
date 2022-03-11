@@ -4,15 +4,13 @@ from src.logger import logger
 from src.pvpc import pvpc
 from src.web import web
 import json
-import requests
-from datetime import datetime, date, timedelta
+from datetime import date, timedelta
 
 def main():
     log = logger()
     log.start("ree.log", False)
     try:
-        log.info('Hello world')
-        w = web('.cache')
+        request = web('.cache')
         it_date = date(2021, 6, 1)
         end_date = date(2022, 3, 11)
         delta = timedelta(days=1)
@@ -20,11 +18,11 @@ def main():
         while it_date <= end_date:
             url = 'https://api.esios.ree.es/archives/70/download_json?locale=es&date={}-{}-{}'.format(it_date.year, it_date.month, it_date.day)
             it_date += delta
-            data = w.get(url)
+            data = request.get(url)
             try:
                 p = pvpc(json.loads(data))
             except:
-                data = w.get(url, True)
+                data = request.get(url, True)
                 p = pvpc(json.loads(data))
             print('{};{};{};{}'.format(p.date().strftime("%d/%m/%Y"), p.max(), p.avg(), p.min()))
     except Exception as e:
