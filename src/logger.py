@@ -1,12 +1,13 @@
 from datetime import datetime
 
-class Logger:
+class logger:
     _instance = None
     _logHandle = None
+    _stdout = False
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(Logger, cls).__new__(cls)
+            cls._instance = super(logger, cls).__new__(cls)
         return cls._instance
     
     def stop(self):
@@ -15,7 +16,8 @@ class Logger:
             self._logHandle.close()
             self._logHandle = None
 
-    def start(self, fileName):
+    def start(self, fileName, stdout):
+        self._stdout = stdout
         self._logHandle = open(fileName, 'a+', 1)
         self.info("Log start")
     
@@ -27,9 +29,8 @@ class Logger:
     
     def log(self, tag, message):
         output = self._getTimeFormatted() + '\t[' + tag + '] ' + message
-        print(output)
-        if self._logHandle:
-            self._logHandle.write(output + '\n')
+        if (self._stdout): print(output)
+        if self._logHandle: self._logHandle.write(output + '\n')
 
     def _getTimeFormatted(self):
         now = datetime.now()
